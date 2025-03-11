@@ -1,0 +1,45 @@
+module(
+    name = "pass",
+    version = "0.1",
+)
+
+bazel_dep(name = "rules_cc", version = "0.1.1")
+
+bazel_dep(name = "rules_python", version = "1.2.0", dev_dependency = True)
+
+bazel_dep(name = "zlib", version = "1.3.1.bcr.5")
+
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "planet_osm_torrent",
+    url = "https://planet.openstreetmap.org/pbf/planet-250303.osm.pbf.torrent",
+    sha256 = "1984f138fffc36724968e729a23c008bae23c7edc66b408d0316b2b6c8176b52",
+)
+
+python = use_extension(
+    "@rules_python//python/extensions:python.bzl",
+    "python",
+    dev_dependency = True,
+)
+python.toolchain(
+    is_default = True,
+    python_version = "3.13",
+)
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pypi",
+    python_version = "3.13",
+    requirements_lock = "//:requirements.txt",
+)
+use_repo(pip, "pypi")
+
+# Hedron's Compile Commands Extractor for Bazel
+# https://github.com/hedronvision/bazel-compile-commands-extractor
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    commit = "4f28899228fb3ad0126897876f147ca15026151e",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+)

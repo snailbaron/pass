@@ -1,0 +1,6 @@
+[submodule "deps/libosmium"]
+	path = deps/libosmium
+	url = https://github.com/osmcode/libosmium.git
+[submodule "deps/protozero"]
+	path = deps/protozero
+	url = https://github.com/mapbox/protozero.git
